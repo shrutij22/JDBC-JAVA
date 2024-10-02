@@ -1,1 +1,74 @@
+package org.example;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class JDBCApp {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/shruti";
+        String username="root";
+        String password="shruti";
+
+        try{
+            //load and register the driver
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection cn= DriverManager.getConnection(url,username,password);
+            Statement st=cn.createStatement();
+            Scanner sc=new Scanner(System.in);
+            System.out.println("Choose 1 or 2:");
+            int ch=sc.nextInt();
+            switch (ch)
+            {
+                case 1:
+                    System.out.println("Fetching of Data");
+                    ResultSet rr= st.executeQuery("select * from student");
+                    while(rr.next())
+                    {
+                        System.out.println("ID: "+rr.getInt("stid"));
+                        System.out.println("Name : "+rr.getString("stname"));
+                        System.out.println("Mail : "+rr.getString("stmail"));
+                        System.out.println("Mob Number :"+rr.getString("stnumber"));
+                        System.out.println("***********************************************");
+                    }
+
+                case 2:
+                    System.out.println("Enter id : ");
+                    int id=sc.nextInt();
+                    System.out.println("Enter Name : ");
+                    String nm=sc.next();
+                    System.out.println("Enter email : ");
+                    String mail=sc.next();
+                    System.out.println("Enter Mob Number: ");
+                    String mob=sc.next();
+                    int row=st.executeUpdate("Insert into student values("+id+",'"+nm+"','"+mail+"','"+mob+"')");
+                    if(row>0)
+                    {
+                        System.out.println("Insertion Successful!");
+                    }
+                    else{
+                        System.out.println("Not Successful!");
+                    }
+
+                case 3:
+                    System.out.println("Enter id to delete : ");
+                    int chu=sc.nextInt();
+                    int rowset=st.executeUpdate("Delete from student where stid = "+chu);
+                    if(rowset>0)
+                    {
+                        System.out.println("Deleted!");
+                    }
+                    else{
+                        System.out.println("Not");
+                    }
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
 
